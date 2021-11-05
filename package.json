@@ -1,0 +1,21 @@
+{
+  "name": "visitapi",
+  "version": "1.0.0",
+  "description": "Manages and displays Caritas de Monterrey visits",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/louloubadillo/VisitAPI.git"
+  },
+  "author": "louloubadillo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/louloubadillo/VisitAPI/issues"
+  },
+  "homepage": "https://github.com/louloubadillo/VisitAPI#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mysql": "^2.18.1"
+  }
+}
