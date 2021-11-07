@@ -16,8 +16,8 @@ const connection = mysql.createConnection({
 });
 connection.connect();
 
-//Empleados 
-//Agregar empleado a la base de datos
+//Trabajadores
+//Agregar trabajador a la base de datos
 app.post('/agregar-trabajador', (req, res)=>{
     data = req.body;
     // console.log(data);
@@ -62,6 +62,47 @@ app.get('/trabajadores', (req, res) => {
     })
 });
 
+//Departamentos
+//Agregar departamento a la base de datos
+app.post('/agregar-departamento', (req, res)=>{
+    data = req.body;
+    // console.log(data);
+    connection.query('INSERT INTO Departamentos SET ?', data, (err, results, fields)=>{
+        console.log(err)
+        res.send('Se ha añadido el departamento de manera exitosa');
+    })
+})
+//Modificar departamento
+app.post('/modificar-departamento', (req, res)=>{
+    data = req.body;
+    let nombre = data['nombre'];
+    let id_encargado = data['id_encargado'];
+    let ID = data['id_departamento'];
+    connection.query('UPDATE Departamentos SET ? WHERE id_departamento='+ID, { nombre, id_encargado }, (err, results, fields)=>{
+      console.log(err)
+      res.send('Se ha modificado el departamento de manera exitosa');
+    })
+  })
+
+//Borrar departamento
+app.post('/borrar-departamento', (req, res)=>{
+    let ID = req.body.id_departamento;
+    connection.query('DELETE FROM Departamentos WHERE id_departamento='+ID, (err, results, fields)=>{
+      console.log(err)
+      res.send('Se ha eliminado el departamento de manera exitosa');
+    })
+  })
+  // Regresa la lista de trabajadores
+app.get('/departamentos', (req, res) => {
+    connection.query('SELECT * FROM Departamentos; ', function (err, results, fields) {
+        if (err) {
+            res.status(500).send('No se puede establecer conexion con base de datos');
+        }
+        else {
+            res.send(results);
+        }
+    })
+});
 
 // PORT
 const port = 3000;

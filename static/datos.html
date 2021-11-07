@@ -83,9 +83,67 @@
             
         </div>
     </section>
-
+    <hr>
+    <section >
+        <h1>Departamentos</h1>
+        <div id="boxes-forms">
+            <div id="box-forms-large">
+                <h3 style="margin-bottom: 8px;">Lista de Departamentos</h3>
+                <table id="departamentos-tabla">
+                    <thead>
+                        <td>ID</td>
+                        <td>Nombre</td>
+                        <td>ID Encargado</td>
+                    </thead>
+                </table>
+                <input type="button" class="buttonShow" id="toggleVisibilityButton2" value="Mostrar / Ocultar">
+            </div>
+            <div id="box-forms">
+                <form id="form-agregar-departamento" onsubmit='agregarDepartamento(event)'>
+                    <h2>Nuevo Departamento</h2>
+                    Nombre:
+                    <input type="text" name="name" id="name" required>
+                    <br>
+                    ID Encargado:
+                    <input type="text" name="encargado" id="encargado" >
+                    <br>
+                    <input class="button" type="submit" value="Enviar">
+                </form>
+            </div>
+            <div id="box-forms">
+                <form id="form-modificar-departamento" onsubmit='modificarDepartamento(event)'>
+                    <h2>Actualizar un Departamento</h2>
+                    ID:
+                    <input type="text" name="userID" id="userID" required>
+                    <br>
+                    Nombre:
+                    <input type="text" name="name" id="name" required>
+                    <br>
+                    ID Encargado:
+                    <input type="text" name="encargado" id="encargado" >
+                    <br>
+                    <input class="button" type="submit" value="Enviar">
+                </form>
+            </div>
+            <div id="box-forms">
+                <form id="form-borrar-departamento" onsubmit='eliminarDepartamento(event)'>
+                    <h2>Borrar un departamento</h2>
+                    ID:
+                    <input type="text" name="userID" id="userID" required>
+                    <br>
+                    <p>Confirmar</p>
+                    <input type="checkbox" id="" required> <br>
+                    <input class="button" type="submit" value="Enviar">
+                </form>
+            </div>
+            
+        </div>
+    </section>
     <footer> <p>Hecho con ♡ por el equipo de Visitapp</p></footer>
-    <script>           
+    <script>        
+        document.getElementById("trabajadores-tabla").style.display = "none"
+        document.getElementById("departamentos-tabla").style.display = "none"
+        //Sección trabajadores   
         function obtenerTrabajadores(){
             let tabla = document.querySelector('#trabajadores-tabla');
             // Vaciar tabla
@@ -199,6 +257,109 @@
                 alert(data);
                 // Refreshear tabla de usuarios
                 obtenerTrabajadores()
+            })
+        }
+        //Sección departamentos
+        function obtenerDepartamentos(){
+            let tabla = document.querySelector('#departamentos-tabla');
+            // Vaciar tabla
+            tabla.innerHTML = `<thead>
+                            <td><strong>ID</strong></td>
+                            <td><strong>Nombre</strong></td>
+                            <td><strong>ID Encargado</strong></td>
+                        </thead>`
+            // Obtener datos de /trabajadores
+            fetch('/departamentos')
+            .then(data=>data.json()).then(data=>{
+                for (let i = 0; i < data.length; i++) {
+                    let id = data[i].id_departamento;
+                    let nombre = data[i].nombre;
+                    let encargado = data[i].id_encargado;
+                    // Crear una nueva fila
+                    let fila = document.createElement('tr');
+                    // Crear una nueva celda
+                    let userID_td = document.createElement('td');
+                    userID_td.innerHTML = id;
+                    let nombre_td = document.createElement('td');
+                    nombre_td.innerHTML = nombre;
+                    let encargado_td = document.createElement('td');
+                    encargado_td.innerHTML = encargado;
+                    // Agregar celdas a fila
+                    fila.append(userID_td, nombre_td,encargado_td);
+                    tabla.append(fila)
+                }
+            })
+        }
+        obtenerDepartamentos();
+
+        document.getElementById("toggleVisibilityButton2").addEventListener("click", function(button) {    
+        if (document.getElementById("departamentos-tabla").style.display === "none") {
+            document.getElementById("departamentos-tabla").style.display = "";
+        } else {
+            document.getElementById("departamentos-tabla").style.display = "none";
+        }
+        });
+        
+        function agregarDepartamento(e){
+            e.preventDefault();
+            // Seleccionar forma y datos
+            let form = document.querySelector('#form-agregar-departamento');
+            let nombre = form.querySelector('#name').value;
+            let id_encargado = form.querySelector('#encargado').value;
+            // Realizar consulta con fetch
+            fetch('/agregar-departamento', {
+                method: 'POST', 
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({nombre, id_encargado})
+            }).then(data=>data.text()).then(data=>{
+                alert(data);
+                // Refreshear tabla de usuarios
+                obtenerDepartamentos()
+            })
+        }
+
+        function modificarDepartamento(e){
+            e.preventDefault();
+            // Seleccionar forma y datos
+            let form = document.querySelector('#form-modificar-departamento');
+            let id_departamento = form.querySelector('#userID').value;
+            let nombre = form.querySelector('#name').value;
+            let id_encargado = form.querySelector('#encargado').value;
+            // Realizar consulta con fetch
+            fetch('/modificar-departamento', {
+                method: 'POST', 
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({id_departamento,nombre,id_encargado})
+            }).then(data=>data.text()).then(data=>{
+                alert(data);
+                // Refreshear tabla de usuarios
+                obtenerDepartamentos()
+            })
+        }
+
+        function eliminarDepartamento(e){
+            e.preventDefault();
+            // Seleccionar forma y datos
+            let form = document.querySelector('#form-borrar-departamento');
+            let id_departamento= form.querySelector('#userID').value;
+            // Realizar consulta con fetch
+            fetch('/borrar-departamento', {
+                method: 'POST', 
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({id_departamento})
+            }).then(data=>data.text()).then(data=>{
+                alert(data);
+                // Refreshear tabla de usuarios
+                obtenerDepartamentos()
             })
         }
     </script>

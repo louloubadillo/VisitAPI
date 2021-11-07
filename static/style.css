@@ -244,3 +244,17 @@ footer{
     background-color: #098194;
     color: white;
 }
+
+#departamentos-tabla{
+    text-align: left;
+    width: 40%;
+   
+}
+#departamentos-tabla thead{
+    text-align: center;
+    background-color: #0d91a56c;
+
+}
+#departamentos-tabla td{
+    padding: 10px; 
+}
