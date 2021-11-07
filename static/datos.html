@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+        <title>VisitAPI</title>
+</head>
+<body>
+    <nav>
+        <a href="https://www.caritas.org.mx/"><img id="hero" src="https://www.caritas.org.mx/wp-content/uploads/2019/11/caritasmty-logo-white_dc4a69f5a9b61be4fa028ffde84f244d.png"></a>
+        <div id="pages">
+            <ul>
+                <li><a href="adminIndex.html">Inicio</a></li>
+                <li><a href="datos.html">Modificar base de datos</a></li>
+                <li><a href="graficas.html">Gráficas</a></li>
+            </ul>
+    </nav>
+
+    <section >
+        <h1>Trabajadores</h1>
+        <div id="boxes-forms">
+            <div id="box-forms-large">
+                <h3 style="margin-bottom: 8px;">Lista de Trabajadores</h3>
+                <table id="trabajadores-tabla">
+                    <thead>
+                        <td>ID</td>
+                        <td>Nombre</td>
+                        <td>Email</td>
+                        <td>Encargado</td>
+                    </thead>
+                </table>
+                <input type="button" class="buttonShow" id="toggleVisibilityButton" value="Mostrar / Ocultar">
+            </div>
+            <div id="box-forms">
+                <form id="form-agregar-trabajador" onsubmit='agregarTrabajador(event)'>
+                    <h2>Nuevo Trabajador</h2>
+                    Nombre:
+                    <input type="text" name="name" id="name" required>
+                    <br>
+                    Email:
+                    <input type="email" name="email" id="email" required>
+                    <br>
+                    Encargado:
+                    <input type="checkbox" name="encargado" id="encargado" >
+                    <br>
+                    <input class="button" type="submit" value="Enviar">
+                </form>
+            </div>
+            <div id="box-forms">
+                <form id="form-modificar-trabajador" onsubmit='modificarTrabajador(event)'>
+                    <h2>Actualizar un trabajador</h2>
+                    ID:
+                    <input type="text" name="userID" id="userID" required>
+                    <br>
+                    Nombre:
+                    <input type="text" name="name" id="name" required>
+                    <br>
+                    Email:
+                    <input type="email" name="email" id="email" required>
+                    <br>
+                    Encargado:
+                    <input type="checkbox" name="encargado" id="encargado" >
+                    <br>
+                    <input class="button" type="submit" value="Enviar">
+                </form>
+            </div>
+            <div id="box-forms">
+                <form id="form-borrar-trabajador" onsubmit='eliminarTrabajador(event)'>
+                    <h2>Borrar un trabajador</h2>
+                    ID:
+                    <input type="text" name="userID" id="userID" required>
+                    <br>
+                    <p>Confirmar</p>
+                    <input type="checkbox" id="" required> <br>
+                    <input class="button" type="submit" value="Enviar">
+                </form>
+            </div>
+            
+        </div>
+    </section>
+
+    <footer> <p>Hecho con ♡ por el equipo de Visitapp</p></footer>
+    <script>           
+        function obtenerTrabajadores(){
+            let tabla = document.querySelector('#trabajadores-tabla');
+            // Vaciar tabla
+            tabla.innerHTML = `<thead>
+                            <td><strong>ID</strong></td>
+                            <td><strong>Nombre</strong></td>
+                            <td><strong>Email</strong></td>
+                            <td><strong>Encargado</strong></td>
+                        </thead>`
+            // Obtener datos de /trabajadores
+            fetch('/trabajadores')
+            .then(data=>data.json()).then(data=>{
+                for (let i = 0; i < data.length; i++) {
+                    let id = data[i].id_trabajador;
+                    let nombre = data[i].nombre;
+                    let email = data[i].email;
+                    let encargado = data[i].esEncargado;
+                    // Crear una nueva fila
+                    let fila = document.createElement('tr');
+                    // Crear una nueva celda
+                    let userID_td = document.createElement('td');
+                    userID_td.innerHTML = id;
+                    let nombre_td = document.createElement('td');
+                    nombre_td.innerHTML = nombre;
+                    let email_td = document.createElement('td');
+                    email_td.innerHTML = email;
+                    let encargado_td = document.createElement('td');
+                    if(encargado){
+                        encargado_td.innerHTML = 'Sí';
+                    }else{
+                        encargado_td.innerHTML = 'No';
+                    }
+                    // Agregar celdas a fila
+                    fila.append(userID_td, nombre_td, email_td, encargado_td);
+                    tabla.append(fila)
+                }
+            })
+        }
+        obtenerTrabajadores();
+
+        document.getElementById("toggleVisibilityButton").addEventListener("click", function(button) {    
+        if (document.getElementById("trabajadores-tabla").style.display === "none") {
+            document.getElementById("trabajadores-tabla").style.display = "";
+        } else {
+            document.getElementById("trabajadores-tabla").style.display = "none";
+        }
+        });
+        
+        function agregarTrabajador(e){
+            e.preventDefault();
+            // Seleccionar forma y datos
+            let form = document.querySelector('#form-agregar-trabajador');
+            let nombre = form.querySelector('#name').value;
+            let email = form.querySelector('#email').value;
+            let esEncargado = 0; 
+            if(form.querySelector('#encargado').checked){
+                esEncargado = 1;
+            }
+            // Realizar consulta con fetch
+            fetch('/agregar-trabajador', {
+                method: 'POST', 
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({nombre,email,esEncargado})
+            }).then(data=>data.text()).then(data=>{
+                alert(data);
+                // Refreshear tabla de usuarios
+                obtenerTrabajadores()
+            })
+        }
+
+        function modificarTrabajador(e){
+            e.preventDefault();
+            // Seleccionar forma y datos
+            let form = document.querySelector('#form-modificar-trabajador');
+            let id_trabajador = form.querySelector('#userID').value;
+            let nombre = form.querySelector('#name').value;
+            let email = form.querySelector('#email').value;
+            let esEncargado = form.querySelector('#encargado').value;
+            // Realizar consulta con fetch
+            fetch('/modificar-trabajador', {
+                method: 'POST', 
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({id_trabajador,nombre,email,esEncargado})
+            }).then(data=>data.text()).then(data=>{
+                alert(data);
+                // Refreshear tabla de usuarios
+                obtenerTrabajadores()
+            })
+        }
+
+        function eliminarTrabajador(e){
+            e.preventDefault();
+            // Seleccionar forma y datos
+            let form = document.querySelector('#form-borrar-trabajador');
+            let id_trabajador= form.querySelector('#userID').value;
+            // Realizar consulta con fetch
+            fetch('/borrar-trabajador', {
+                method: 'POST', 
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({id_trabajador})
+            }).then(data=>data.text()).then(data=>{
+                alert(data);
+                // Refreshear tabla de usuarios
+                obtenerTrabajadores()
+            })
+        }
+    </script>
+</body>
+</html>

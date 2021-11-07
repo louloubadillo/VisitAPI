@@ -159,3 +159,88 @@ footer{
     padding: 3vh 0;
     color: white;
 }
+
+#boxes-forms{
+    display: flex;
+    margin: 5vh 2vw;
+    flex-wrap: wrap; 
+    flex-direction: row;
+    justify-content: center;
+}
+#box-forms-large{
+    border-radius: 6px;
+    min-width: 30vw;
+    margin: 3vh 2vw;
+    padding:2vh 2vw;
+    background-color: #ffffff;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center; 
+    width: 100%;
+
+}
+#box-forms{
+    border-radius: 6px;
+    min-width: 20vw;
+    margin: 3vh 2vw;
+    padding:2vh 2vw;
+    background-color: #ffffff;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center; 
+
+}
+
+#box-forms input{
+    margin: 3vh auto;
+}
+
+.button {
+    margin: 1vh 0;
+    padding: 1vh;
+    border: 1px solid #0098ae;
+    border-radius: 5px;
+    width: 100%;
+    background-color: #0098ae;
+    color: white;
+}
+
+.button:hover{
+    background-color: #098194;
+    color: white;
+}
+
+#trabajadores-tabla{
+    text-align: left;
+    width: 70%;
+   
+}
+#trabajadores-tabla thead{
+    text-align: center;
+    background-color: #0d91a56c;
+
+}
+#trabajadores-tabla td{
+    padding: 10px; 
+}
+
+.buttonShow {
+    margin: 1vh 0;
+    padding: 1vh;
+    border: 1px solid #0098ae;
+    border-radius: 5px;
+    width: 10vw;
+    background-color: #0098ae;
+    color: white;
+}
+
+.buttonShow:hover{
+    background-color: #098194;
+    color: white;
+}
