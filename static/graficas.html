@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>Gráficas</title>
+    <style>
+        html, body{
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+        aside{
+            font-family: 'Montserrat', sans-serif;
+            width: 300px;
+            padding: 20px;
+            flex-shrink: 1;
+            box-sizing: border-box;
+            position:sticky; 
+            overflow-y: auto;
+            background-color: rgba(9, 48, 71, 0.28);
+        }
+        aside a{
+            display: block;
+            margin: 0.8em 0;
+            text-decoration: none; 
+            color: black; 
+            font-weight: 550;
+        }
+        aside a:hover{
+            text-decoration: underline;
+        }
+        main{
+            flex: 1;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+        
+        main section.graph-cont{
+            padding: 16px;
+            padding-left: 20px;
+            box-sizing: border-box; 
+
+        }
+            .graph-cont canvas{
+                width: 100% !important;
+                max-height: 70vh !important;
+            }
+
+        #title{
+            display:flex; 
+            flex-direction: column;
+            justify-content: center;
+            align-content: center;
+            text-align: center; 
+        }
+
+        #banner{
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            position: absolute;
+            bottom: 30px; 
+            width: 270px; 
+        }
+
+        #graph-wrapper{
+            display: flex; 
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+        }
+
+        h2{
+            padding-left: 15px;
+        }
+
+        canvas:not(#map-grafica){
+            max-width: 40vw; 
+            max-height: 30vh;
+            margin: 0 auto;
+        }
+        canvas.horizontal:not(#map-grafica){
+            max-width: 50vw; 
+            max-height: 30vh; 
+            margin: 0 auto;
+        }
+        
+        @media screen and (max-width: 600px) {
+            aside{
+                display:none; 
+            }
+            canvas{
+                max-width: 70vw; 
+                max-height: 30vh; 
+            }
+            canvas.hotizontal{
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main> 
+        <nav>
+            <a href="https://www.caritas.org.mx/"><img id="hero" src="https://www.caritas.org.mx/wp-content/uploads/2019/11/caritasmty-logo-white_dc4a69f5a9b61be4fa028ffde84f244d.png"></a>
+            <div id="pages">
+                <ul>
+                    <li><a href="adminIndex.html">Inicio</a></li>
+                    <li><a href="datos.html">Modificar base de datos</a></li>
+                    <li><a href="graficas.html">Gráficas</a></li>
+                </ul>
+        </nav>
+        <div id="title">
+            <h1>Gráficas</h1>
+        </div>
+        <div id="graph-wrapper">
+            <section class="graph-cont"id="visitas-mes">
+                <h2>Visitas por Mes</h2>
+                <canvas id="visitas-mes-grafica"></canvas>
+            </section>
+
+            <section class="graph-cont"id="visitas-departamento">
+                <h2>Visitas por Departamento</h2>
+                <canvas id="visitas-departamento-grafica"></canvas>
+            </section>
+            
+
+        </div>
+    </main>
+    
+
+    <!-- CHART.JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- CHART.JS MAPS -->
+    <script src="https://unpkg.com/chartjs-chart-geo@3.0.0/build/index.umd.min.js"></script>
+    <script>
+
+        async function obtenerVisitasMes(){
+            const req = await fetch('/views/visitas_mes');
+            const data = await req.json();
+            const config = {
+                type: 'bar',
+                data: {
+                    datasets: [{
+                        label: 'visitas',
+                        data: data,
+                        backgroundColor: [
+                            'rgba(27, 193, 161, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(255, 159, 64, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(153, 102, 255, 0.7)',
+                            'rgba(255, 96, 87, 0.7)'
+                        ],
+                    }]
+                },
+                options: {
+                    parsing: {
+                        xAxisKey: 'Mes',
+                        yAxisKey: 'Cantidad'
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                        title: {
+                            display: false
+                        }
+                    }
+                },
+            };
+            const chart = new Chart(document.getElementById('visitas-mes-grafica'), config)
+        }
+
+        async function obtenerVisitasDepartamento(){
+            const req = await fetch('/views/visitas_departamento');
+            const data = await req.json();
+            const config = {
+                type: 'bar',
+                data: {
+                    datasets: [{
+                        label: 'visitas',
+                        data: data,
+                        backgroundColor: [
+                            'rgba(27, 193, 161, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(255, 159, 64, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(153, 102, 255, 0.7)',
+                            'rgba(255, 96, 87, 0.7)'
+                        ],
+                    }]
+                },
+                options: {
+                    parsing: {
+                        xAxisKey: 'Departamento',
+                        yAxisKey: 'Visitas'
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                        title: {
+                            display: false
+                        }
+                    }
+                },
+            };
+            const chart = new Chart(document.getElementById('visitas-departamento-grafica'), config)
+        }
+        
+
+        obtenerVisitasMes();
+        obtenerVisitasDepartamento(); 
+    </script>
+
+</body>
+</html>

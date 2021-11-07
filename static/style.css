@@ -258,3 +258,17 @@ footer{
 #departamentos-tabla td{
     padding: 10px; 
 }
+
+#visitas-tabla{
+    text-align: left;
+    width: 40%;
+   
+}
+#visitas-tabla thead{
+    text-align: center;
+    background-color: #0d91a56c;
+
+}
+#visitas-tabla td{
+    padding: 10px; 
+}

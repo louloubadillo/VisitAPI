@@ -21,7 +21,7 @@
             </ul>
     </nav>
 
-    <section >
+    <section>
         <h1>Trabajadores</h1>
         <div id="boxes-forms">
             <div id="box-forms-large">
@@ -38,7 +38,7 @@
             </div>
             <div id="box-forms">
                 <form id="form-agregar-trabajador" onsubmit='agregarTrabajador(event)'>
-                    <h2>Nuevo Trabajador</h2>
+                    <h2>Nuevo trabajador</h2>
                     Nombre:
                     <input type="text" name="name" id="name" required>
                     <br>
@@ -100,7 +100,7 @@
             </div>
             <div id="box-forms">
                 <form id="form-agregar-departamento" onsubmit='agregarDepartamento(event)'>
-                    <h2>Nuevo Departamento</h2>
+                    <h2>Nuevo departamento</h2>
                     Nombre:
                     <input type="text" name="name" id="name" required>
                     <br>
@@ -112,7 +112,7 @@
             </div>
             <div id="box-forms">
                 <form id="form-modificar-departamento" onsubmit='modificarDepartamento(event)'>
-                    <h2>Actualizar un Departamento</h2>
+                    <h2>Actualizar un departamento</h2>
                     ID:
                     <input type="text" name="userID" id="userID" required>
                     <br>
@@ -139,10 +139,68 @@
             
         </div>
     </section>
+    <hr>
+    <section>
+        <h1>Visitas</h1>
+        <div id="boxes-forms">
+            <div id="box-forms-large">
+                <h3 style="margin-bottom: 8px;">Lista de Visitas</h3>
+                <table id="visitas-tabla">
+                    <thead>
+                        <td>ID</td>
+                        <td>ID Departamento</td>
+                        <td>Fecha</td>
+                    </thead>
+                </table>
+                <input type="button" class="buttonShow" id="toggleVisibilityButton3" value="Mostrar / Ocultar">
+            </div>
+            <div id="box-forms">
+                <form id="form-agregar-visita" onsubmit='agregarVisita(event)'>
+                    <h2>Nueva visita</h2>
+                    ID Departamento
+                    <input type="text" name="departamento" id="departamento" required>
+                    <br>
+                    Fecha
+                    <input type="datetime-local" name="fecha" id="fecha" required>
+                    <br>
+                    <input class="button" type="submit" value="Enviar">
+                </form>
+            </div>
+            <div id="box-forms">
+                <form id="form-modificar-visita" onsubmit='modificarVisita(event)'>
+                    <h2>Actualizar una visita</h2>
+                    ID:
+                    <input type="text" name="userID" id="userID" required>
+                    <br>
+                    ID Departamento
+                    <input type="text" name="departamento" id="departamento" required>
+                    <br>
+                    Fecha
+                    <input type="datetime-local" name="fecha" id="fecha" required>
+                    <br>
+                    <input class="button" type="submit" value="Enviar">
+                </form>
+            </div>
+            <div id="box-forms">
+                <form id="form-borrar-visita" onsubmit='eliminarVisita(event)'>
+                    <h2>Borrar una visita</h2>
+                    ID:
+                    <input type="text" name="userID" id="userID" required>
+                    <br>
+                    <p>Confirmar</p>
+                    <input type="checkbox" id="" required> <br>
+                    <input class="button" type="submit" value="Enviar">
+                </form>
+            </div>
+            
+        </div>
+    </section>
     <footer> <p>Hecho con ♡ por el equipo de Visitapp</p></footer>
     <script>        
         document.getElementById("trabajadores-tabla").style.display = "none"
         document.getElementById("departamentos-tabla").style.display = "none"
+        document.getElementById("visitas-tabla").style.display = "none"
+
         //Sección trabajadores   
         function obtenerTrabajadores(){
             let tabla = document.querySelector('#trabajadores-tabla');
@@ -259,6 +317,7 @@
                 obtenerTrabajadores()
             })
         }
+
         //Sección departamentos
         function obtenerDepartamentos(){
             let tabla = document.querySelector('#departamentos-tabla');
@@ -362,6 +421,115 @@
                 obtenerDepartamentos()
             })
         }
+
+        //Sección visitas
+        function obtenerVisitas(){
+            let tabla = document.querySelector('#visitas-tabla');
+            // Vaciar tabla
+            tabla.innerHTML = `<thead>
+                            <td><strong>ID</strong></td>
+                            <td><strong>ID Departamento</strong></td>
+                            <td><strong>Fecha</strong></td>
+                        </thead>`
+            // Obtener datos de /visitas
+            fetch('/visitas')
+            .then(data=>data.json()).then(data=>{
+                for (let i = 0; i < data.length; i++) {
+                    let id = data[i].id_visita;
+                    let departamento = data[i].departamento;
+                    let fecha = data[i].fecha;
+                    //format date
+                    let date = new Date(fecha);
+                    //format date in dd/mm/yyyy hh:mm
+                    let formattedDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
+                    // Crear una nueva fila
+                    let fila = document.createElement('tr');
+                    // Crear una nueva celda
+                    let id_td = document.createElement('td');
+                    id_td.innerHTML = id;
+                    let departamento_td = document.createElement('td');  
+                    departamento_td.innerHTML = departamento;
+                    let fecha_td = document.createElement('td');
+                    fecha_td.innerHTML = formattedDate;
+                    
+                    // Agregar celdas a fila
+                    fila.append(id_td, departamento_td, fecha_td);
+                    tabla.append(fila)
+                }
+            })
+        }
+        obtenerVisitas();
+        document.getElementById("toggleVisibilityButton3").addEventListener("click", function(button) {    
+        if (document.getElementById("visitas-tabla").style.display === "none") {
+            document.getElementById("visitas-tabla").style.display = "";
+        } else {
+            document.getElementById("visitas-tabla").style.display = "none";
+        }
+        });
+
+        function agregarVisita(e){
+            e.preventDefault();
+            // Seleccionar forma y datos
+            let form = document.querySelector('#form-agregar-visita');
+            let departamento = form.querySelector('#departamento').value;
+            let fecha = form.querySelector('#fecha').value;
+            // Realizar consulta con fetch
+            fetch('/agregar-visita', {
+                method: 'POST', 
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({departamento,fecha})
+            }).then(data=>data.text()).then(data=>{
+                alert(data);
+                // Refreshear tabla de usuarios
+                obtenerVisitas()
+            })
+        }
+
+        function modificarVisita(e){
+            e.preventDefault();
+            // Seleccionar forma y datos
+            let form = document.querySelector('#form-modificar-visita');
+            let id_visita = form.querySelector('#userID').value;
+            let departamento = form.querySelector('#departamento').value;
+            let fecha = form.querySelector('#fecha').value;
+            // Realizar consulta con fetch
+            fetch('/modificar-visita', {
+                method: 'POST', 
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({id_visita,departamento,fecha})
+            }).then(data=>data.text()).then(data=>{
+                alert(data);
+                // Refreshear tabla de usuarios
+                obtenerVisitas()
+            })
+        }
+
+        function eliminarVisita(e){
+            e.preventDefault();
+            // Seleccionar forma y datos
+            let form = document.querySelector('#form-borrar-visita');
+            let id_visita= form.querySelector('#userID').value;
+            // Realizar consulta con fetch
+            fetch('/borrar-visita', {
+                method: 'POST', 
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({id_visita})
+            }).then(data=>data.text()).then(data=>{
+                alert(data);
+                // Refreshear tabla de usuarios
+                obtenerVisitas()
+            })
+        }
+
     </script>
 </body>
 </html>
