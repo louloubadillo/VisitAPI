@@ -143,6 +143,54 @@ section h1{
     color: white;
 }
 
+.admin{
+    display: flex;
+    flex-direction: column;
+    margin: 4vh 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin h3{
+    margin: 2vh 0;
+}
+
+.admin ul{
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin li{
+    margin: 1vh 0;
+    text-align: left; 
+    border-radius: 10px;
+}
+
+.caract{
+    display: flex;
+    flex-direction: column;
+    margin: 4vh 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.caract h3{
+    margin: 2vh 0;
+}
+
+.caract ul{
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.caract li{
+    margin: 1vh 0;
+    text-align: left; 
+    border-radius: 10px;
+}
+
 @media screen and (max-width: 800px) {
     html{
         width: 100%;

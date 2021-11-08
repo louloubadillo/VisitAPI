@@ -145,12 +145,22 @@
         async function obtenerVisitasMes(){
             const req = await fetch('/views/visitas_mes');
             const data = await req.json();
+            //function that changes month number to month name
+            const monthsData = data.map(d => {
+                const month = d.Mes
+                const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+                return {
+                    Mes: monthNames[month+1],
+                    Cantidad: d.Cantidad
+                }
+            });
             const config = {
                 type: 'bar',
                 data: {
                     datasets: [{
-                        label: 'visitas',
-                        data: data,
+                        labels: data.map(d => d.Mes),
+                        data: data.map(d => d.Cantidad),
                         backgroundColor: [
                             'rgba(27, 193, 161, 0.7)',
                             'rgba(255, 206, 86, 0.7)',
