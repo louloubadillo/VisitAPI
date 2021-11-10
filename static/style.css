@@ -52,7 +52,7 @@ nav li a{
     text-decoration: none;
     color: white;
     align-self: center;
-    font-size: larger;
+    font-size: large;
     font-weight: bold;
 }
 
@@ -82,14 +82,25 @@ section h1{
     font-size: 4rem;
 }
 
+
 .app-contenedor p {
     padding: 0 7vw;
-    width: minmax(20%, 400px);
+    width: minmax(20%, 600px);
 }
 
 .app{
     margin: 0 5vw;
 }
+
+/*center app image horizontally*/
+.app img{
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    padding: 2em 0;
+}
+
 
 #informacion{
     background-color: #cbedf2;

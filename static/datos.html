@@ -18,6 +18,7 @@
                 <li><a href="adminIndex.html">Inicio</a></li>
                 <li><a href="datos.html">Modificar base de datos</a></li>
                 <li><a href="graficas.html">Gráficas</a></li>
+                <li><a href="index.html">Cerrar sesión</a></li>
             </ul>
     </nav>
 
@@ -195,7 +196,7 @@
             
         </div>
     </section>
-    <footer> <p>Hecho con ♡ por el equipo de Visitapp</p></footer>
+    <footer> <p>Hecho por el equipo de Visitapp</p></footer>
     <script>        
         document.getElementById("trabajadores-tabla").style.display = "none"
         document.getElementById("departamentos-tabla").style.display = "none"
@@ -440,8 +441,8 @@
                     let fecha = data[i].fecha;
                     //format date
                     let date = new Date(fecha);
-                    //format date in dd/mm/yyyy hh:mm
-                    let formattedDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
+                    //format date in dd/mm/yyyy hh:mm and append 0 when single digit
+                    let formattedDate = ("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear() + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
                     // Crear una nueva fila
                     let fila = document.createElement('tr');
                     // Crear una nueva celda
