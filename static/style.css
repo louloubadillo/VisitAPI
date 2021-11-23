@@ -143,6 +143,21 @@ section h1{
     color: white;
 }
 
+.logout button{
+    margin: 2vh 0 0 0;
+    padding: 1vh;
+    border: 1px solid white;
+    border-radius: 5px;
+    width: auto;
+    background-color: white;
+    color: #0098ae;
+}
+
+.logout button:hover{
+    background-color: white;
+    color: #098194;
+}
+
 .admin{
     display: flex;
     flex-direction: column;

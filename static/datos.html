@@ -195,7 +195,12 @@
             
         </div>
     </section>
-    <footer> <p>Hecho con ♡ por el equipo de Visitapp</p></footer>
+    <footer> 
+        <p>Hecho con ♡ por el equipo de Visitapp</p>
+        <form class ="logout" action="/logout" method = "GET">
+            <button type="submit">Cerrar sesión</button>   
+        </form>
+    </footer>
     <script>        
         document.getElementById("trabajadores-tabla").style.display = "none"
         document.getElementById("departamentos-tabla").style.display = "none"
@@ -217,7 +222,7 @@
                 for (let i = 0; i < data.length; i++) {
                     let id = data[i].id_trabajador;
                     let nombre = data[i].nombre;
-                    let email = data[i].email;
+                    let email = data[i].email.toLowerCase(); 
                     let encargado = data[i].esEncargado;
                     // Crear una nueva fila
                     let fila = document.createElement('tr');
