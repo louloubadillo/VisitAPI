@@ -346,3 +346,8 @@ footer{
 #visitas-tabla td{
     padding: 10px; 
 }
+
+.app img{
+    width: 40vw;
+    border-radius: 10px;
+}

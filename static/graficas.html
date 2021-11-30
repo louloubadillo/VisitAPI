@@ -15,26 +15,7 @@
             height: 100vh;
             width: 100vw;
         }
-        aside{
-            font-family: 'Montserrat', sans-serif;
-            width: 300px;
-            padding: 20px;
-            flex-shrink: 1;
-            box-sizing: border-box;
-            position:sticky; 
-            overflow-y: auto;
-            background-color: rgba(9, 48, 71, 0.28);
-        }
-        aside a{
-            display: block;
-            margin: 0.8em 0;
-            text-decoration: none; 
-            color: black; 
-            font-weight: 550;
-        }
-        aside a:hover{
-            text-decoration: underline;
-        }
+
         main{
             flex: 1;
             overflow-y: auto;
@@ -42,6 +23,7 @@
         }
         
         main section.graph-cont{
+            margin: 0 8vw;
             padding: 16px;
             padding-left: 20px;
             box-sizing: border-box; 
@@ -49,7 +31,7 @@
         }
             .graph-cont canvas{
                 width: 100% !important;
-                max-height: 70vh !important;
+                max-height: 90vh !important;
             }
 
         #title{
@@ -80,24 +62,11 @@
             padding-left: 15px;
         }
 
-        canvas:not(#map-grafica){
-            max-width: 70vw; 
-            max-height: 50vh; 
-            margin: 0 auto;
-        }
-        canvas.horizontal:not(#map-grafica){
-            max-width: 70vw; 
-            max-height: 30vh; 
-            margin: 0 auto;
-        }
         
         @media screen and (max-width: 600px) {
-            aside{
-                display:none; 
-            }
             canvas{
-                max-width: 70vw; 
-                max-height: 30vh; 
+                max-width: 90vw; 
+                max-height: 90vh; 
             }
             canvas.hotizontal{
                 width: 100%;
@@ -115,21 +84,21 @@
                     <li><a href="adminIndex.html">Inicio</a></li>
                     <li><a href="datos.html">Modificar base de datos</a></li>
                     <li><a href="graficas.html">Gráficas</a></li>
-                    <li><a href="index.html">Cerrar sesión</a></li>
                 </ul>
         </nav>
         <div id="title">
             <h1>Gráficas</h1>
         </div>
         <div id="graph-wrapper">
-            <section class="graph-cont"id="visitas-mes">
-                <h2>Visitas por Mes</h2>
-                <canvas id="visitas-mes-grafica"></canvas>
-            </section>
-
+        
             <section class="graph-cont"id="visitas-departamento">
                 <h2>Visitas por Departamento</h2>
                 <canvas id="visitas-departamento-grafica"></canvas>
+            </section>
+
+            <section class="graph-cont"id="visitas-mes">
+                <h2>Visitas por Mes</h2>
+                <canvas id="visitas-mes-grafica"></canvas>
             </section>
             
 
@@ -138,63 +107,7 @@
 
     <!-- CHART.JS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- CHART.JS MAPS -->
-    <script src="https://unpkg.com/chartjs-chart-geo@3.0.0/build/index.umd.min.js"></script>
     <script>
-
-        async function obtenerVisitasMes(){
-            const req = await fetch('/views/visitas_mes');
-            const data = await req.json();
-            //function that changes month number to month name
-            const monthsData = data.map(d => {
-                const month = d.Mes
-                const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-                return {
-                    Mes: monthNames[month+1],
-                    Cantidad: d.Cantidad
-                }
-            });
-            let mes = [];
-            let visitas = []; 
-
-            try {data.map((item)=> {
-                const mes_num = item.Mes
-                const mes_nombre = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-                mes.push(mes_nombre[mes_num+1]);
-            });} catch(e){}
-            const config = {
-                type: 'bar',
-                data: {
-                    datasets: [{
-                        labels: [],
-                        data: [0, 10, 5, 2, 20, 30],
-                        backgroundColor: [
-                            'rgba(27, 193, 161, 0.7)',
-                            'rgba(255, 206, 86, 0.7)',
-                            'rgba(255, 159, 64, 0.7)',
-                            'rgba(54, 162, 235, 0.7)',
-                            'rgba(153, 102, 255, 0.7)',
-                            'rgba(255, 96, 87, 0.7)'
-                        ],
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false,
-                        },
-                        title: {
-                            display: false
-                        }
-                    }
-                },
-            };
-            const chart = new Chart(document.getElementById('visitas-mes-grafica'), config)
-        }
 
         async function obtenerVisitasDepartamento(){
             const req = await fetch('/views/visitas_departamento');
@@ -229,15 +142,61 @@
                         title: {
                             display: false
                         }
-                    }
+                    }, 
                 },
             };
             const chart = new Chart(document.getElementById('visitas-departamento-grafica'), config)
         }
-        
 
-        obtenerVisitasMes();
+        async function obtenerVisitasMes(){
+            const req = await fetch('/views/visitas_mes');
+            const data = await req.json();
+            // Mes to string
+            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            const data_string = data.map(d => {
+                return {
+                    ...d,
+                    Mes: meses[d.Mes - 1]
+                }
+            });
+            const config = {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'visitas',
+                        data: data_string,
+                        backgroundColor: [
+                            'rgba(27, 193, 161, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(255, 159, 64, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(153, 102, 255, 0.7)',
+                            'rgba(255, 96, 87, 0.7)'
+                        ],
+                    }]
+                },
+                options: {
+                    parsing: {
+                        xAxisKey: 'Mes',
+                        yAxisKey: 'Cantidad'
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                        title: {
+                            display: false
+                        }
+                    },
+                },
+            };
+            const chart = new Chart(document.getElementById('visitas-mes-grafica'), config)
+        }
+    
         obtenerVisitasDepartamento(); 
+        obtenerVisitasMes();
     </script>
 
 </body>
