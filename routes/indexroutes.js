@@ -18,7 +18,7 @@ router.get('/login', (req,res) => {
 
 router.post('/login', function(req,res){
     var {user, password} = req.body;
-    if(user == process.env.USER && password == process.env.PASSWORD){
+    if(user == process.env.USERNAME && password == process.env.PASSWORD){
         const token = jwt.sign(
             {user: user},
             process.env.SECRET,
