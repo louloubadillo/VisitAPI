@@ -121,3 +121,6 @@ dist
 info.js
 database/data_generator.py
 database/
+
+.vscode
+.env 
